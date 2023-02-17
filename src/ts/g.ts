@@ -36,6 +36,14 @@ class Student {
   ) {}
 }
 
+function getStudentStatus(student: Student): string {
+  if (student.name == "Sebastian" && student.handedInOnTime && student.passed) {
+    return "VG";
+  } else {
+      return "IG";
+    }
+  }
+
 /*function getStudentStatus(student: Student): string {
   student.passed =
     student.name == "Sebastian"
@@ -51,38 +59,28 @@ class Student {
   }
 }*/
 
-function getStudentStatus(student: Student): string {
-  if (student.name == "Sebastian" && student.handedInOnTime && student.passed) {
-    return "VG";
-  } else {
-      return "IG";
-    }
-  }
-
-
 /*
   3. Variabelnamn är viktiga. Kika igenom följande kod och gör om och rätt.
   Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
   */
 
 class Temp {
-  constructor(public q: string, public where: Date, public v: number) {}
+  constructor(public location: string, public day: Date, public degrees: number) {}
 }
 
+function averageWeeklyTemperature(temperature: Temp[]) {
+  let averageTemperature = 0;
+  const millisecondsInWeek = 604800000;
+  const daysInWeek = 7;
 
-
-function averageWeeklyTemperature(heights: Temp[]) {
-  let r = 0;
-
-  for (let who = 0; who < heights.length; who++) {
-    if (heights[who].q === "Stockholm") {
-      if (heights[who].where.getTime() > Date.now() - 604800000) {
-        r += heights[who].v;
+  for (let i = 0; i < temperature.length; i++) {
+    if (temperature[i].location === "Stockholm") {
+      if (temperature[i].day.getTime() > Date.now() - millisecondsInWeek) {
+        averageTemperature += temperature[i].degrees;
       }
     }
   }
-
-  return r / 7;
+  return averageTemperature / daysInWeek;
 }
 
 /*
@@ -150,7 +148,8 @@ function createImageElement(product: IshowProduct, container: HTMLDivElement){
   5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
   går att göra betydligt bättre. Gör om så många som du kan hitta!
   */
-function presentStudents(students: Student[]) {
+
+/*  function presentStudents(students: Student[]) {
   for (const student of students) {
     if (student.handedInOnTime) {
       let container = document.createElement("div");
@@ -170,6 +169,23 @@ function presentStudents(students: Student[]) {
       container.appendChild(checkbox);
       let listOfStudents = document.querySelector("ul#failedstudents");
       listOfStudents?.appendChild(container);
+    }
+  }
+}*/
+
+function presentStudents(students: Student[]) {
+  const passedStudents = document.querySelector("ul#passedstudents");
+  const failedStudents = document.querySelector("ul#failedstudents");
+  const container = document.createElement("div");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  container.appendChild(checkbox);
+
+  for (const student of students) {
+    if (student.handedInOnTime) {
+      passedStudents?.appendChild(container);
+    } else {
+      failedStudents?.appendChild(container);
     }
   }
 }
